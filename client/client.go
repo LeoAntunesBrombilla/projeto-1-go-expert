@@ -40,17 +40,21 @@ func Client() {
 	req, err := http.NewRequest("GET", "http://localhost:8080/cotacao", nil)
 
 	if err != nil {
-		if errors.Is(err, context.DeadlineExceeded) {
-			log.Println("Operation took longer than 300ms")
-		} else {
-			log.Println("Operation failed:", err)
-		}
+		log.Println("Operation failed:", err)
 	}
 
 	req = req.WithContext(ctx)
 
 	client := &http.Client{}
 	res, err := client.Do(req)
+
+	if err != nil {
+		if errors.Is(err, context.DeadlineExceeded) {
+			log.Println("Operation took longer than 300ms")
+		} else {
+			log.Println("Operation failed:", err)
+		}
+	}
 
 	defer res.Body.Close()
 
